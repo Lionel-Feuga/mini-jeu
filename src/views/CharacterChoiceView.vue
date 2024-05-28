@@ -1,5 +1,5 @@
 <template>
-  <div class="nan vh-100 d-flex flex-column">
+  <div class="nan vh-100 d-flex flex-column align-items-center ">
     <video autoplay muted loop playsinline class="background-video">
       <source src="/characterChoiceBackground.mp4" type="video/mp4">
       Your browser does not support the video tag.
@@ -12,7 +12,7 @@
           </div>
         </div>
       </div>
-      <div class="container d-flex justify-content-center mt-5">
+      <div class="container d-flex vh-100 justify-content-center mt-5">
         <div class="row">
           <div class="col d-flex flex-column text-center align-items-center">
             <div class="dropdown">

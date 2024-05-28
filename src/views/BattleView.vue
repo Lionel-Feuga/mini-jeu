@@ -10,18 +10,18 @@
     <div class="container">
       <div class="row">
         <div class="col-6 d-flex align-items-center justify-content-between">
-          <div
-            class="d-flex flex-column justify-content-center gap-2 actions mb-4"
-          >
+          <div class="d-flex flex-column justify-content-center gap-2 actions mb-4">
+            <p class="outlined-text">Niveau {{ player.level }} <br>
+              Expérience : {{ player.experience }}/{{ player.experienceToNextLevel }}</p>
             <button
-              style="border-radius: 50px"
+              style="border-radius: 50px;"
               @click="useAbility('swordAttack')"
-              class="action-buttons px-3"
+              class="action-buttons-attack px-3"
             >
               Attaque à l'épée
             </button>
             <button
-              style="border-radius: 50px"
+              style="border-radius: 50px;"
               @click="useAbility('reinforcement')"
               class="action-buttons"
             >
@@ -29,23 +29,16 @@
             </button>
           </div>
           <div class="">
-            <p class="outlined-text ms-5">
-              {{ player.name }}: {{ player.health }} HP
+            <p class="outlined-text text-center">
+              {{ player.name }} : {{ player.health }} HP <br>
             </p>
-            <img class="me-5" :src="player.imageUrl" alt="Image du joueur" />
+            <img :src="player.imageUrl" alt="Image du joueur" />
           </div>
         </div>
-        <div
-          class="col-6 d-flex flex-column align-items-center position-relative"
-        >
+        <div class="col-6 d-flex flex-column align-items-center position-relative">
           <p class="outlined-text">{{ enemy.name }}: {{ enemy.health }} HP</p>
           <img :src="enemy.imageUrl" alt="Image de l'ennemi" />
-          <img
-            v-if="showAttackEffect"
-            src="@/assets/vfx_slash2.png"
-            alt="Effet d'attaque"
-            class="attack-effect"
-          />
+          <img v-if="showAttackEffect" src="@/assets/vfx_slash2.png" alt="Effet d'attaque" class="attack-effect" />
         </div>
       </div>
       <div class="log mt-4" ref="logContainer">
@@ -53,12 +46,6 @@
         <p ref="logText">{{ displayedLog }}</p>
       </div>
     </div>
-    <img
-      v-if="showVictoryImage"
-      src="@/assets/victory.png"
-      alt="Victoire"
-      class="victory-image"
-    />
   </div>
 </template>
 
@@ -73,9 +60,13 @@ export default {
       player: {
         name: "",
         health: 0,
+        level: 0,
+        experience: 0,
+        experienceToNextLevel: 0,
         strength: 0,
         imageUrl: null,
         abilities: {},
+        weapon: {},
         isReinforced: false,
         reinforcementTurns: 0,
       },
@@ -90,7 +81,6 @@ export default {
       displayedLog: "",
       previousLog: "",
       showAttackEffect: false,
-      showVictoryImage: false,
     };
   },
   created() {
@@ -99,9 +89,13 @@ export default {
     if (characterData) {
       this.player.name = characterData.name;
       this.player.health = characterData.health;
+      this.player.level = characterData.level;
+      this.player.experience = characterData.experience;
+      this.player.experienceToNextLevel = characterData.experienceToNextLevel;
       this.player.strength = characterData.strength;
       this.player.imageUrl = characterData.imageUrl;
       this.player.abilities = characterData.abilities;
+      this.player.weapon = characterData.weapon;
     } else {
       console.error(`Character data for ${characterName} not found`);
     }
@@ -124,23 +118,20 @@ export default {
           this.showAttackEffect = true;
           setTimeout(() => {
             this.showAttackEffect = false;
-          }, 500); // Effet visible pendant 500 ms
+          }, 500); 
         }
         this.displayLogLetterByLetter(logEntry, () => {
           setTimeout(() => {
+            this.checkEnemyDeath();
             this.endTurn();
-          }, 1800); // Délai de 1.8 secondes avant le tour de l'ennemi
+          }, 1000); 
         });
       }
     },
     endTurn() {
       if (this.currentTurn === "player") {
-        if (this.enemy.health <= 0) {
-          this.showVictory();
-        } else {
-          this.currentTurn = "enemy";
-          this.enemyAction();
-        }
+        this.currentTurn = "enemy";
+        this.enemyAction();
       } else {
         this.currentTurn = "player";
         if (this.player.isReinforced) {
@@ -152,21 +143,50 @@ export default {
       }
     },
     enemyAction() {
-      const damage = this.enemy.strength;
-      this.player.health -= damage;
-      const logEntry = `L'ennemi attaque et inflige ${damage} dégâts.`;
-      this.updateLogs(logEntry);
-      this.displayedLog = "";
-      this.displayLogLetterByLetter(logEntry, () => {
-        setTimeout(() => {
-          this.endTurn();
-        }, 1000);
-      });
+      if (this.enemy.health > 0) {
+        const damage = this.enemy.strength;
+        this.player.health -= damage;
+        const logEntry = `L'ennemi attaque et inflige ${damage} dégâts.`;
+        this.updateLogs(logEntry);
+        this.displayedLog = "";
+        this.displayLogLetterByLetter(logEntry, () => {
+          setTimeout(() => {
+            this.endTurn();
+          }, 1000);
+        });
+      }
+    },
+    checkEnemyDeath() {
+      if (this.enemy.health <= 0) {
+        this.gainExperience(25); // Gagne 25 points d'expérience pour avoir tué l'ennemi
+      }
+    },
+    gainExperience(exp) {
+      this.player.experience += exp;
+      if (this.player.experience >= this.player.experienceToNextLevel) {
+        this.levelUp();
+      }
+    },
+    levelUp() {
+      this.player.level += 1;
+      this.player.experience -= this.player.experienceToNextLevel;
+      this.player.experienceToNextLevel *= 1.5; // Augmente l'expérience nécessaire pour le prochain niveau
+      this.player.strength += 5; // Augmente la force de 5 à chaque niveau
+      this.player.health += 20; // Augmente la santé de 20 à chaque niveau
+      this.updateLogs(`${this.player.name} a atteint le niveau ${this.player.level}!`);
     },
     updateLogs(newLog) {
       this.previousLog = this.lastLog;
       this.lastLog = newLog;
       this.displayedLog = "";
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const logContainer = this.$refs.logContainer;
+        if (logContainer) {
+          logContainer.scrollTop = logContainer.scrollHeight;
+        }
+      });
     },
     displayLogLetterByLetter(logEntry, callback) {
       let index = 0;
@@ -178,10 +198,7 @@ export default {
           clearInterval(interval);
           if (callback) callback();
         }
-      }, 10);
-    },
-    showVictory() {
-      this.showVictoryImage = true;
+      }, 7);
     }
   },
   watch: {
@@ -205,7 +222,7 @@ export default {
   background-position: center;
   color: white;
   font-size: 2rem;
-  overflow: hidden; /* Masquer les débordements */
+  overflow: hidden; 
 }
 
 .outlined-text {
@@ -229,41 +246,15 @@ h1 {
   background-color: #6c757d;
   font-size: 1.5rem;
   height: 7rem;
-  overflow-y: auto;
 }
 
 .attack-effect {
   position: absolute;
-  top: 10%;
-  left: 60%;
-  width: 750px; /* Ajuster la taille de l'image */
-  height: 750px; /* Ajuster la taille de l'image */
-  transform: translate(-50%, -50%) rotate(35deg);
-  pointer-events: none; /* Empêcher l'interaction avec l'image */
+  top: -5%;
+  left: 58%;
+  width: 60rem; 
+  height: 60rem; 
+  transform: translate(-50%, -50%) rotate(25deg);
+  pointer-events: none; 
 }
-
-.victory-image {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  animation: victoryAnimation 2s forwards;
-}
-
-@keyframes victoryAnimation {
-  0% {
-    width: 0;
-    height: 0;
-    opacity: 0;
-  }
-  100% {
-    width: 1300px;
-    height: 650px;
-    opacity: 1;
-  }
-}
-
 </style>
