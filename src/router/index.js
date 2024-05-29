@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import CharacterChoiceView from '../views/CharacterChoiceView.vue';
 import BattleView from '../views/BattleView.vue';
+import testView from '../views/testView.vue';
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/battle',
     name: 'battle',
     component: BattleView
+  },
+  {
+    path: '/testView',
+    name: 'testView',
+    component: testView
   }
 ];
 

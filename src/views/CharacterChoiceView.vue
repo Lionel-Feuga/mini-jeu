@@ -20,7 +20,7 @@
               <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownWarrior">
                 <li><WarriorCharacter /></li>
               </ul>
-              <button class="mt-3"><h2 class="outlined-text">Guerrier</h2></button>
+              <button class="ms-5 mt-3"><h2 class="outlined-text">Guerrier</h2></button>
               <button @click="startBattle('warrior')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
             </div>
           </div>
@@ -30,7 +30,7 @@
               <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownMage">
                 <li><MageCharacter /></li>
               </ul>
-              <button class="mt-3"><h2 class="outlined-text">Mage</h2></button>
+              <button class="ms-5 mt-3"><h2 class="outlined-text">Mage</h2></button>
               <button @click="startBattle('mage')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
             </div>
           </div>
@@ -40,7 +40,7 @@
               <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownArcher">
                 <li><ArcherCharacter /></li>
               </ul>
-              <button class="mt-3"><h2 class="outlined-text">Archer</h2></button>
+              <button class="ms-5 mt-3"><h2 class="outlined-text">Archer</h2></button>
               <button @click="startBattle('archer')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
             </div>
           </div>
@@ -50,7 +50,7 @@
               <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownAssassin">
                 <li><AssassinCharacter /></li>
               </ul>
-              <button class="mt-3"><h2 class="outlined-text">Assassin</h2></button>
+              <button class="ms-5 mt-3"><h2 class="outlined-text">Assassin</h2></button>
               <button @click="startBattle('assassin')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
             </div>
           </div>
@@ -63,34 +63,24 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import WarriorCharacter from '../components/WarriorCharacter.vue';
 import MageCharacter from '../components/MageCharacter.vue';
 import ArcherCharacter from '../components/ArcherCharacter.vue';
 import AssassinCharacter from '../components/AssassinCharacter.vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-  name: 'CharacterChoiceView',
-  components: {
-    WarriorCharacter,
-    MageCharacter,
-    ArcherCharacter,
-    AssassinCharacter
-  },
-  data() {
-    return {
-      selectedCharacter: null
-    };
-  },
-  methods: {
-    selectCharacter(character) {
-      this.selectedCharacter = character;
-    },
-    startBattle(character) {
-      this.selectCharacter(character);
-      this.$router.push({ name: 'battle', params: { character: character } });
-    }
-  }
+const selectedCharacter = ref(null);
+const router = useRouter();
+
+const selectCharacter = (character) => {
+  selectedCharacter.value = character;
+};
+
+const startBattle = (character) => {
+  selectCharacter(character);
+  router.push({ name: 'battle', params: { character: character } });
 };
 </script>
 
@@ -130,7 +120,8 @@ img {
 }
 
 img {
-  width: 250px;
+  width: 18.75rem;
+  height: auto;
   transition: transform 0.3s ease-in-out;
 }
 

@@ -1,25 +1,27 @@
+<script setup>
+import { onMounted } from "vue";
+import { useCharacter } from "../composables/useCharacter";
+
+const characterId = 1;
+const { character, errorMessage, loadCharacter } = useCharacter();
+
+onMounted(async () => {
+  await loadCharacter(characterId);
+});
+</script>
+
 <template>
-  <div class="character-details">
+  <div v-if="character" class="character-details">
     <p>Points de vie: {{ character.health }}</p>
     <p>Points de mana: {{ character.mana }}</p>
     <p>Force: {{ character.strength }}</p>
     <p>Intelligence: {{ character.intelligence }}</p>
     <p>Agilité: {{ character.agility }}</p>
   </div>
+  <div v-else-if="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
 </template>
-
-<script>
-import { characters } from '../data/characters.js';
-
-export default {
-  name: 'WarriorCharacter',
-  data() {
-    return {
-      character: characters.warrior
-    };
-  }
-};
-</script>
 
 <style scoped>
 .character-details {
