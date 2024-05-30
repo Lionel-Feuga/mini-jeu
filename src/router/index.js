@@ -16,9 +16,10 @@ const routes = [
     component: CharacterChoiceView
   },
   {
-    path: '/battle',
+    path: '/battle/:character',
     name: 'battle',
-    component: BattleView
+    component: BattleView,
+    props:true,
   },
   {
     path: '/testView',

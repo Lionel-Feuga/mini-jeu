@@ -63,24 +63,34 @@
   </div>
 </template>
 
-<script setup>
-import WarriorCharacter from '../components/WarriorCharacter.vue';
-import MageCharacter from '../components/MageCharacter.vue';
-import ArcherCharacter from '../components/ArcherCharacter.vue';
-import AssassinCharacter from '../components/AssassinCharacter.vue';
-import { ref } from 'vue';
+<script >
+// import WarriorCharacter from '../components/WarriorCharacter.vue';
+// import MageCharacter from '../components/MageCharacter.vue';
+// import ArcherCharacter from '../components/ArcherCharacter.vue';
+// import AssassinCharacter from '../components/AssassinCharacter.vue';
+import { useCharacter } from '@/composables/useCharacter';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-const selectedCharacter = ref(null);
-const router = useRouter();
+export default {
+  setup() {
+    const { characters, loadCharacters } = useCharacter();
+    const router = useRouter(); // Utilisation correcte de useRouter
 
-const selectCharacter = (character) => {
-  selectedCharacter.value = character;
-};
+    onMounted(() => {
+      loadCharacters();
+    });
 
-const startBattle = (character) => {
-  selectCharacter(character);
-  router.push({ name: 'battle', params: { character: character } });
+    const selectCharacter = (character) => {
+      const characterParam = encodeURIComponent(JSON.stringify(character));
+      router.push({ name: 'BattleView', params: { character: characterParam } });
+    };
+
+    return {
+      characters,
+      selectCharacter
+    };
+  }
 };
 </script>
 

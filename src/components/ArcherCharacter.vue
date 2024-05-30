@@ -3,10 +3,10 @@ import { onMounted } from "vue";
 import { useCharacter } from "../composables/useCharacter";
 
 const characterId = 3;
-const { character, errorMessage, loadCharacter } = useCharacter();
+const { character, errorMessage, loadCharacters } = useCharacter();
 
 onMounted(async () => {
-  await loadCharacter(characterId);
+  await loadCharacters(characterId);
 });
 </script>
 
