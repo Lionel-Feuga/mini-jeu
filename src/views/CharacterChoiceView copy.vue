@@ -14,7 +14,7 @@ import { useRouter } from 'vue-router';
 export default {
   setup() {
     const { characters, loadCharacters } = useCharacter();
-    const router = useRouter(); // Utilisation correcte de useRouter
+    const router = useRouter();
 
     onMounted(() => {
       loadCharacters();

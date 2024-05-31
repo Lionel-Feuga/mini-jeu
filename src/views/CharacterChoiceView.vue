@@ -1,69 +1,5 @@
-<template>
-  <div class="nan vh-100 d-flex flex-column align-items-center ">
-    <video autoplay muted loop playsinline class="background-video">
-      <source src="/characterChoiceBackground.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="content ">
-      <div class="container text-center">
-        <div class="row">
-          <div class="col mt-5">
-            <h1 class="outlined-text">Choisissez votre personnage</h1>
-          </div>
-        </div>
-      </div>
-      <div class="container d-flex vh-100 justify-content-center mt-5">
-        <div class="row">
-          <div class="col d-flex flex-column text-center align-items-center">
-            <div class="dropdown">
-              <img src="@/assets/warrior.webp" alt="Warrior" class="character-image dropdown-toggle" id="dropdownWarrior" data-bs-toggle="dropdown" aria-expanded="false">
-              <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownWarrior">
-                <li><WarriorCharacter /></li>
-              </ul>
-              <button class="ms-5 mt-3"><h2 class="outlined-text">Guerrier</h2></button>
-              <button @click="startBattle('warrior')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
-            </div>
-          </div>
-          <div class="col d-flex flex-column text-center align-items-center">
-            <div class="dropdown">
-              <img src="@/assets/mage.webp" alt="Mage" class="character-image dropdown-toggle" id="dropdownMage" data-bs-toggle="dropdown" aria-expanded="false">
-              <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownMage">
-                <li><MageCharacter /></li>
-              </ul>
-              <button class="ms-5 mt-3"><h2 class="outlined-text">Mage</h2></button>
-              <button @click="startBattle('mage')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
-            </div>
-          </div>
-          <div class="col d-flex flex-column text-center align-items-center">
-            <div class="dropdown">
-              <img src="@/assets/archer.webp" alt="Archer" class="character-image dropdown-toggle" id="dropdownArcher" data-bs-toggle="dropdown" aria-expanded="false">
-              <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownArcher">
-                <li><ArcherCharacter /></li>
-              </ul>
-              <button class="ms-5 mt-3"><h2 class="outlined-text">Archer</h2></button>
-              <button @click="startBattle('archer')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
-            </div>
-          </div>
-          <div class="col d-flex flex-column text-center align-items-center">
-            <div class="dropdown">
-              <img src="@/assets/assassin.webp" alt="Assassin" class="character-image dropdown-toggle" id="dropdownAssassin" data-bs-toggle="dropdown" aria-expanded="false">
-              <ul class="dropdown-menu mt-5 ms-5" aria-labelledby="dropdownAssassin">
-                <li><AssassinCharacter /></li>
-              </ul>
-              <button class="ms-5 mt-3"><h2 class="outlined-text">Assassin</h2></button>
-              <button @click="startBattle('assassin')"><img src="@/assets/fleche-droite.png" alt="Icône de sélection" style="width: 80%;"></button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="selectedCharacter" class="character-details-container mt-5">
-        <component :is="selectedCharacter"></component>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script >
+<script>
+// Décommentez les lignes ci-dessous et ajustez les chemins si nécessaire pour vos composants
 // import WarriorCharacter from '../components/WarriorCharacter.vue';
 // import MageCharacter from '../components/MageCharacter.vue';
 // import ArcherCharacter from '../components/ArcherCharacter.vue';
@@ -72,10 +8,20 @@ import { useCharacter } from '@/composables/useCharacter';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
+function getImageUrl(imageUrl) {
+  try {
+    const images = require.context('../assets', true, /\.(png|jpe?g|svg|webp)$/);
+    return images(`./${imageUrl}`);
+  } catch (e) {
+    console.error(`Error loading image: ${imageUrl}`, e);
+    return require('../assets/warrior.webp');
+  }
+}
+
 export default {
   setup() {
     const { characters, loadCharacters } = useCharacter();
-    const router = useRouter(); // Utilisation correcte de useRouter
+    const router = useRouter();
 
     onMounted(() => {
       loadCharacters();
@@ -88,40 +34,63 @@ export default {
 
     return {
       characters,
-      selectCharacter
+      selectCharacter,
+      getImageUrl
     };
   }
 };
 </script>
 
+<template>
+  <div class="video-background">
+    <video autoplay muted loop playsinline>
+      <source src="/characterChoiceBackgroundVideo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay content">
+      <div class="container vh-100 d-flex align-items-center">
+        <div class="row">
+          <div class="col">
+            <table class="table">
+              <tbody class="d-flex">
+                <tr v-for="character in characters" :key="character.id">
+                  <td class="d-flex align-items-center flex-column">
+                    <img :src="getImageUrl(character.imageUrl)" alt="Character Image" class="img-fluid">
+                    <button @click="selectCharacter(character)" class="btn btn-primary mb-2 outlined-text">
+                      {{ character.name }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+
 <style scoped>
-.nan {
+.video-background {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  background: no-repeat;
+  background-size: cover;
+}
+
+.video-overlay {
   position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  color: white;
-}
-
-.background-video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: translate(-50%, -50%);
-  z-index: -1;
-}
-
-button {
-  border: none;
-  background: none;
-  color: white;
-}
-
-img {
-  border-radius: 500px;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.5); /* Improve text readability */
+  height: 100vh;
 }
 
 .content {
@@ -133,28 +102,22 @@ img {
   width: 18.75rem;
   height: auto;
   transition: transform 0.3s ease-in-out;
+  border-radius: 500px;
 }
 
 img:hover {
   transform: scale(1.2);
 }
 
-.outlined-text {
+button {
+  border: none;
+  background-color: black;
   color: white;
-  text-shadow: 
+  text-shadow:
     -1px -1px 0 #000,  
      1px -1px 0 #000,
     -1px  1px 0 #000,
      1px  1px 0 #000;
 }
 
-.character-details-container {
-  color: white;
-  text-align: center;
-}
-
-.dropdown-menu {
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-}
 </style>

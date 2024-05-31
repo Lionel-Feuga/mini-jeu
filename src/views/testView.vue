@@ -39,6 +39,7 @@ onMounted(async () => {
               <table v-if="!errorMessage" class="table">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Nom</th>
                     <th>HP</th>
                     <th>Mana</th>
@@ -49,11 +50,11 @@ onMounted(async () => {
                     <th>Gold</th>
                     <th>Arme</th>
                     <th>Armure</th>
-                    <th>Image</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="character in characters" :key="character.id">
+                    <td><img :src="getImageUrl(character.imageUrl)" alt="Character Image"></td>
                     <td>{{ character.name }}</td>
                     <td>{{ character.health }}</td>
                     <td>{{ character.mana }}</td>
@@ -64,7 +65,6 @@ onMounted(async () => {
                     <td>{{ character.gold }}</td>
                     <td>{{ getWeaponName(character.weaponId) }}</td>
                     <td>{{ getArmorName(character.armorId)}}</td>
-                    <td><img :src="getImageUrl(character.imageUrl)" alt="Character Image"></td>
                   </tr>
                 </tbody>
               </table>
@@ -86,18 +86,18 @@ onMounted(async () => {
               <table v-if="!errorMessage" class="table">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Nom</th>
                     <th>HP</th>
                     <th>Force</th>
-                    <th>Image</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="enemy in enemies" :key="enemy.id">
+                    <td><img :src="getImageUrl(enemy.imageUrl)" alt="Enemy Image"></td>
                     <td>{{ enemy.name }}</td>
                     <td>{{ enemy.health }}</td>
                     <td>{{ enemy.strength }}</td>
-                    <td><img :src="getImageUrl(enemy.imageUrl)" alt="Enemy Image"></td>
                   </tr>
                 </tbody>
               </table>
@@ -130,4 +130,5 @@ img {
   height: 50px;
   object-fit: cover;
 }
+
 </style>
