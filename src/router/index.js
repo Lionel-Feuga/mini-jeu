@@ -1,35 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import CharacterChoiceView from '../views/CharacterChoiceView.vue';
-import BattleView from '../views/BattleView.vue';
-import testView from '../views/testView.vue';
+import CharacterChoiceView from '@/views/CharacterChoiceView.vue';
+import BattleView from '@/views/BattleView.vue';
+import HomeView from '@/views/HomeView.vue';
+import testView from '@/views/testView.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: HomeView
   },
   {
     path: '/characterChoice',
-    name: 'characterChoice',
+    name: 'CharacterChoice',
     component: CharacterChoiceView
   },
   {
-    path: '/battle/:character',
-    name: 'battle',
+    path: '/battle',
+    name: 'BattleView',
     component: BattleView,
-    props:true,
+    props: true 
   },
   {
-    path: '/testView',
+    path: '/characterSheets',
     name: 'testView',
     component: testView
-  }
+  },
+
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes
 });
 

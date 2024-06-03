@@ -27,7 +27,7 @@ export default {
       <div class="content text-center">
         <h1 class="mb-5 outlined-text">Bienvenue dans mon Jeu de Combat</h1>
         <GlowingButton @click="lancerPartie">Lancer la Partie</GlowingButton>
-        <RouterLink class="test nav-link mt-5" to="/testView">TEST</RouterLink>
+        <RouterLink class="test nav-link mt-5" to="/characterSheets">TEST</RouterLink>
       </div>
     </div>
   </body>

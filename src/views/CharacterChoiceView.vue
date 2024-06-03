@@ -1,9 +1,4 @@
 <script>
-// Décommentez les lignes ci-dessous et ajustez les chemins si nécessaire pour vos composants
-// import WarriorCharacter from '../components/WarriorCharacter.vue';
-// import MageCharacter from '../components/MageCharacter.vue';
-// import ArcherCharacter from '../components/ArcherCharacter.vue';
-// import AssassinCharacter from '../components/AssassinCharacter.vue';
 import { useCharacter } from '@/composables/useCharacter';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -44,19 +39,19 @@ export default {
 <template>
   <div class="video-background">
     <video autoplay muted loop playsinline>
-      <source src="/characterChoiceBackgroundVideo.mp4" type="video/mp4">
+      <source src="/characterChoiceBackgroundVideo5.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <div class="video-overlay content">
-      <div class="container vh-100 d-flex align-items-center">
+      <div class="container d-flex align-items-center">
         <div class="row">
           <div class="col">
             <table class="table">
-              <tbody class="d-flex">
+              <tbody style="border: none;" class="d-flex">
                 <tr v-for="character in characters" :key="character.id">
-                  <td class="d-flex align-items-center flex-column">
+                  <td  style="background: none; border: none;" class="d-flex align-items-center flex-column">
                     <img :src="getImageUrl(character.imageUrl)" alt="Character Image" class="img-fluid">
-                    <button @click="selectCharacter(character)" class="btn btn-primary mb-2 outlined-text">
+                    <button @click="selectCharacter(character)" class="btn btn-primary mb-2 mt-3 outlined-text">
                       {{ character.name }}
                     </button>
                   </td>
@@ -70,32 +65,41 @@ export default {
   </div>
 </template>
 
-
-
 <style scoped>
 .video-background {
   position: fixed;
-  right: 0;
-  bottom: 0;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   z-index: -100;
-  background: no-repeat;
-  background-size: cover;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit:cover;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .video-overlay {
   position: relative;
   z-index: 1;
-  background: rgba(0, 0, 0, 0.5); /* Improve text readability */
+  width: 100%;
   height: 100vh;
 }
 
 .content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 img {
@@ -119,5 +123,4 @@ button {
     -1px  1px 0 #000,
      1px  1px 0 #000;
 }
-
 </style>
