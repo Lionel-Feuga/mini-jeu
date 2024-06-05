@@ -1,12 +1,12 @@
 <template>
   <div v-if="character">
     <h1>{{ character.name }}</h1>
-    <p>HP {{ character.health }}</p>
+    <p>HP: {{ hp }}</p>
     <p>Mana: {{ character.mana }}</p>
     <img
-      :src="getImageUrl(character.imageUrl)"
-      alt="Character Image"
-      style="width: 22rem; height: auto"
+        :src="getImageUrl(character.imageUrl)"
+        alt="Character Image"
+        style="width: 22rem; height: auto"
     />
   </div>
   <div v-else>
@@ -17,6 +17,7 @@
 <script setup>
 const props = defineProps({
   character: Object,
+  hp: Number,
   getImageUrl: Function,
 });
 </script>
@@ -26,6 +27,6 @@ p,
 h1 {
   color: white;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000;
+  1px 1px 0 #000;
 }
 </style>

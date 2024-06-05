@@ -1,12 +1,12 @@
 <template>
   <div v-if="enemy">
     <h1>{{ enemy.name }}</h1>
-    <p>HP: {{ enemy.health }}</p>
+    <p>HP: {{ hp }}</p>
     <p>Force: {{ enemy.strength }}</p>
     <img
-      :src="getImageUrl(enemy.imageUrl)"
-      alt="Enemy Image"
-      style="width: 22rem; height: auto"
+        :src="getImageUrl(enemy.imageUrl)"
+        alt="Enemy Image"
+        style="width: 22rem; height: auto"
     />
   </div>
   <div v-else>
@@ -17,6 +17,7 @@
 <script setup>
 const props = defineProps({
   enemy: Object,
+  hp: Number,
   getImageUrl: Function,
 });
 </script>
@@ -26,6 +27,6 @@ p,
 h1 {
   color: white;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000;
+  1px 1px 0 #000;
 }
 </style>
